@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jordan Lane Peacock — Pay for My Time</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: Georgia, 'Times New Roman', serif;
+      background-color: #fdf4f8;
+      color: #2a1a35;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Header ── */
+    header {
+      background-color: #7278c4;
+      color: #fff;
+      padding: 3rem 1.5rem 2.5rem;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 2.4rem;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.5rem;
+      color: #ffe8f4;
+    }
+
+    header .tagline {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 1.05rem;
+      color: #d4dcff;
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* ── Intro ── */
+    .intro {
+      max-width: 660px;
+      margin: 2.5rem auto 0;
+      padding: 0 1.5rem;
+      text-align: center;
+    }
+
+    .intro p {
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: #4a2a5a;
+      margin-bottom: 1rem;
+    }
+
+    .intro p:last-child { margin-bottom: 0; }
+
+    /* ── Carousel ── */
+    .carousel-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 2rem 0 3rem;
+    }
+
+    .carousel-hint {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.8rem;
+      color: #b090c0;
+      text-align: center;
+      margin-bottom: 1rem;
+      letter-spacing: 0.04em;
+    }
+
+    .carousel-outer {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .carousel-track {
+      display: flex;
+      gap: 1.25rem;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding: 0.5rem 2rem 1.5rem;
+      cursor: grab;
+    }
+
+    .carousel-track::-webkit-scrollbar { display: none; }
+    .carousel-track.grabbing { cursor: grabbing; }
+
+    .carousel-track::before,
+    .carousel-track::after {
+      content: '';
+      flex-shrink: 0;
+      width: calc((100vw - 560px) / 2 - 1.25rem);
+    }
+
+    .service-card {
+      flex-shrink: 0;
+      width: 560px;
+      background: #fffafd;
+      border: 1.5px solid #e8b8d4;
+      border-radius: 14px;
+      padding: 1.75rem 1.75rem 1.5rem;
+      box-shadow: 0 2px 16px rgba(180, 100, 160, 0.10);
+      scroll-snap-align: center;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+
+    .service-card:hover {
+      box-shadow: 0 6px 24px rgba(100, 110, 200, 0.16);
+      transform: translateY(-2px);
+    }
+
+    .service-card h2 {
+      font-size: 1.15rem;
+      color: #3a2050;
+      margin-bottom: 0.35rem;
+      line-height: 1.35;
+    }
+
+    .service-card .price {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.85rem;
+      color: #9070a8;
+      margin-bottom: 1.1rem;
+    }
+
+    .service-card .cp-checkout { width: 100%; }
+
+    /* ── Nav buttons ── */
+    .carousel-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      background: #c06488;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 2.4rem;
+      height: 2.4rem;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      transition: background 0.15s, opacity 0.15s;
+      opacity: 0.8;
+    }
+
+    .carousel-btn:hover { background: #a84e72; opacity: 1; }
+    .carousel-btn.prev { left: 0.25rem; }
+    .carousel-btn.next { right: 0.25rem; }
+
+    /* ── Dots ── */
+    .carousel-dots {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 0.25rem;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #e8b8d4;
+      transition: background 0.2s, transform 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .dot.active {
+      background: #7278c4;
+      transform: scale(1.35);
+    }
+
+    /* ── Filter menu ── */
+    .filter-menu {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin: 2rem auto 0;
+      padding: 0 1.5rem;
+      max-width: 660px;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    .filter-tab {
+      background: #fff;
+      border: 1.5px solid #d8b8e8;
+      border-radius: 10px;
+      cursor: pointer;
+      color: #7050a0;
+      padding: 0.75rem 1.75rem;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      transition: background 0.15s, color 0.15s, border-color 0.15s, box-shadow 0.15s;
+      box-shadow: 0 1px 4px rgba(100, 80, 160, 0.08);
+    }
+
+    .filter-tab:hover {
+      background: #f0e8f8;
+      border-color: #b090d0;
+      color: #3a2050;
+    }
+
+    .filter-tab.active {
+      background: #7278c4;
+      border-color: #7278c4;
+      color: #fff;
+      box-shadow: 0 3px 10px rgba(114, 120, 196, 0.35);
+    }
+
+    /* ── Carousel hidden until a category is chosen ── */
+    .carousel-section { display: none; }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.8rem;
+      color: #b090c0;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Jordan Lane Peacock</h1>
+    <p class="tagline">Help fund a summer of changes.</p>
+  </header>
+
+  <div class="intro">
+    <p>
+      It's June 2026. My software company of more than eleven years, Becoming Machinic, has ceased operations. Caleb has moved on to Modern Logic, and I have helped start the Sannvev Institute. However, as part of this process, I have had to declare personal bankruptcy.
+    </p>
+    <p>
+      In parallel, my wife and I are divorcing. It's going about as amicably as these things are able to, but it's also the source of grief and necessary change.
+    </p>
+    <p>
+      The next few months are a bit of a financial dead zone: a lot of one-off expenses, and I'm not yet able to be on payroll with the Sannvev Institute yet. So I would like to offer what services I can commit to during this time of change, to be of value to you and to help see this transformation through to the other side.
+    </p>
+  </div>
+
+  <nav class="filter-menu" aria-label="Filter services">
+    <button class="filter-tab" data-filter="ai">AI</button>
+    <button class="filter-tab" data-filter="startups">Startups</button>
+    <button class="filter-tab" data-filter="roleplaying">Roleplaying</button>
+    <button class="filter-tab" data-filter="donate">Donate</button>
+  </nav>
+
+  <section class="carousel-section">
+    <p class="carousel-hint">← swipe or use arrows →</p>
+    <div class="carousel-outer">
+      <button class="carousel-btn prev" aria-label="Previous">&#8592;</button>
+
+      <div class="carousel-track" id="track">
+
+        <div class="service-card" data-category="donate">
+          <h2>Help me move to Winnipeg</h2>
+          <p class="price">Pay what you want ($20+)</p>
+          <div class="cp-checkout" data-src="https://jordanlanepeacock.checkoutpage.com/help-me-move-to-winnipeg" style="width:100%;"></div>
+        </div>
+
+        <div class="service-card" data-category="ai">
+          <h2>I will help you understand what AI can and can't do</h2>
+          <p class="price">Pay what you want ($75+)</p>
+          <div class="cp-checkout" data-src="https://jordanlanepeacock.checkoutpage.com/ai-consulting" style="width:100%;"></div>
+        </div>
+
+        <div class="service-card" data-category="ai">
+          <h2>I will help you use AI to make your weird little thing</h2>
+          <p class="price">Pay what you want ($300+)</p>
+          <div class="cp-checkout" data-src="https://jordanlanepeacock.checkoutpage.com/weird-little-thing" style="width:100%;"></div>
+        </div>
+
+        <div class="service-card" data-category="roleplaying">
+          <h2>Pre-purchase game sessions</h2>
+          <p class="price">Pay what you want</p>
+          <div class="cp-checkout" data-src="https://jordanlanepeacock.checkoutpage.com/pre-purchase-game-sessions" style="width:100%;"></div>
+        </div>
+
+        <div class="service-card" data-category="roleplaying">
+          <h2>I will run a roleplaying game for you and your friends</h2>
+          <p class="price">Pay what you want ($125+)</p>
+          <div class="cp-checkout" data-src="https://jordanlanepeacock.checkoutpage.com/ttrpg" style="width:100%;"></div>
+        </div>
+
+        <div class="service-card" data-category="roleplaying">
+          <h2>I will help you run your roleplaying game campaign</h2>
+          <p class="price">Pay what you want ($35+)</p>
+          <div class="cp-checkout" data-src="https://jordanlanepeacock.checkoutpage.com/gamemaster-consulting" style="width:100%;"></div>
+        </div>
+
+        <div class="service-card" data-category="startups">
+          <h2>I will consult with you about your startup/idea</h2>
+          <p class="price">Pay what you want ($175+)</p>
+          <div class="cp-checkout" data-src="https://jordanlanepeacock.checkoutpage.com/entrepreneur-consulting" style="width:100%;"></div>
+        </div>
+
+        <div class="service-card" data-category="donate">
+          <h2>Support operations at the Sannvev Institute</h2>
+          <p class="price">Pay what you want</p>
+          <div class="cp-checkout" data-src="https://jordanlanepeacock.checkoutpage.com/donate-to-support-operations-at-the-sannvev-institute" style="width:100%;"></div>
+        </div>
+
+      </div>
+
+      <button class="carousel-btn next" aria-label="Next">&#8594;</button>
+    </div>
+
+    <div class="carousel-dots" id="dots"></div>
+  </section>
+
+  <footer>&copy; 2026 Jordan Lane Peacock</footer>
+
+  <script>
+    const track = document.getElementById('track');
+    const allCards = Array.from(track.querySelectorAll('.service-card'));
+    const dotsContainer = document.getElementById('dots');
+    let current = 0;
+
+    function visible() {
+      return allCards.filter(c => c.style.display !== 'none');
+    }
+
+    function buildDots() {
+      dotsContainer.innerHTML = '';
+      visible().forEach((_, i) => {
+        const dot = document.createElement('button');
+        dot.className = 'dot' + (i === 0 ? ' active' : '');
+        dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+        dot.addEventListener('click', () => goTo(i));
+        dotsContainer.appendChild(dot);
+      });
+    }
+
+    function updateDots(index) {
+      dotsContainer.querySelectorAll('.dot').forEach((d, i) =>
+        d.classList.toggle('active', i === index)
+      );
+    }
+
+    function goTo(index) {
+      const vis = visible();
+      current = Math.max(0, Math.min(index, vis.length - 1));
+      const card = vis[current];
+      const trackRect = track.getBoundingClientRect();
+      const cardRect = card.getBoundingClientRect();
+      const offset = cardRect.left - trackRect.left - (trackRect.width - cardRect.width) / 2;
+      track.scrollBy({ left: offset, behavior: 'smooth' });
+      updateDots(current);
+    }
+
+    function filterCategory(cat) {
+      allCards.forEach(c => {
+        c.style.display = c.dataset.category === cat ? '' : 'none';
+      });
+      current = 0;
+      track.scrollLeft = 0;
+      buildDots();
+    }
+
+    let overlayInjected = false;
+
+    function ensureCheckouts(cards) {
+      let hasNew = false;
+      cards.forEach(card => {
+        const div = card.querySelector('[data-src]:not([data-checkout])');
+        if (div) {
+          div.setAttribute('data-checkout', div.dataset.src);
+          hasNew = true;
+        }
+      });
+      if (hasNew || !overlayInjected) {
+        const old = document.getElementById('cp-overlay');
+        if (old) old.remove();
+        const s = document.createElement('script');
+        s.id = 'cp-overlay';
+        s.src = 'https://assets.checkoutpage.com/overlay.js';
+        s.async = true;
+        document.body.appendChild(s);
+        overlayInjected = true;
+      }
+    }
+
+    document.querySelectorAll('.filter-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        filterCategory(tab.dataset.filter);
+        document.querySelector('.carousel-section').style.display = 'flex';
+        ensureCheckouts(visible());
+      });
+    });
+
+    document.querySelector('.prev').addEventListener('click', () => goTo(current - 1));
+    document.querySelector('.next').addEventListener('click', () => goTo(current + 1));
+
+    let scrollTimer;
+    track.addEventListener('scroll', () => {
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => {
+        const vis = visible();
+        const trackRect = track.getBoundingClientRect();
+        const center = trackRect.left + trackRect.width / 2;
+        let closest = 0, minDist = Infinity;
+        vis.forEach((card, i) => {
+          const rect = card.getBoundingClientRect();
+          const dist = Math.abs(rect.left + rect.width / 2 - center);
+          if (dist < minDist) { minDist = dist; closest = i; }
+        });
+        current = closest;
+        updateDots(current);
+      }, 80);
+    });
+
+    let isDragging = false, startX = 0, startScroll = 0;
+    track.addEventListener('mousedown', e => {
+      isDragging = true; startX = e.pageX; startScroll = track.scrollLeft;
+      track.classList.add('grabbing');
+    });
+    window.addEventListener('mousemove', e => {
+      if (!isDragging) return;
+      track.scrollLeft = startScroll - (e.pageX - startX);
+    });
+    window.addEventListener('mouseup', () => {
+      isDragging = false; track.classList.remove('grabbing');
+    });
+
+  </script>
+
+
+</body>
+</html>
