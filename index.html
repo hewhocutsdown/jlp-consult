@@ -22,6 +22,8 @@
       color: #fff;
       padding: 3rem 1.5rem 2.5rem;
       text-align: center;
+      position: relative;
+      overflow: hidden;
     }
 
     header h1 {
@@ -29,6 +31,7 @@
       letter-spacing: 0.02em;
       margin-bottom: 0.5rem;
       color: #ffe8f4;
+      position: relative;
     }
 
     header .tagline {
@@ -38,24 +41,66 @@
       max-width: 480px;
       margin: 0 auto;
       line-height: 1.6;
+      position: relative;
     }
 
-    /* ── Intro ── */
-    .intro {
+    .header-deco {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      pointer-events: none;
+    }
+    .header-deco.left  { left: 0; }
+    .header-deco.right { right: 0; transform: scaleX(-1); }
+
+    /* ── Story toggle ── */
+    .story-toggle {
       max-width: 660px;
-      margin: 2.5rem auto 0;
+      margin: 1.25rem auto 0;
       padding: 0 1.5rem;
       text-align: center;
     }
 
-    .intro p {
+    .story-toggle summary {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      font-size: 0.9rem;
+      color: #9080b8;
+      cursor: pointer;
+      list-style: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      user-select: none;
+      transition: color 0.15s;
+    }
+
+    .story-toggle summary::-webkit-details-marker { display: none; }
+
+    .story-toggle summary .toggle-icon {
+      font-size: 1rem;
+      line-height: 1;
+      display: inline-block;
+      transition: transform 0.2s;
+    }
+
+    .story-toggle[open] summary { color: #5a3a80; }
+    .story-toggle[open] summary .toggle-icon { transform: rotate(45deg); }
+
+    .story-toggle summary:hover { color: #5a3a80; }
+
+    .story-body {
+      margin-top: 1.25rem;
+      text-align: center;
+    }
+
+    .story-body p {
       font-size: 1.05rem;
       line-height: 1.75;
       color: #4a2a5a;
       margin-bottom: 1rem;
     }
 
-    .intro p:last-child { margin-bottom: 0; }
+    .story-body p:last-child { margin-bottom: 0; }
 
     /* ── Carousel ── */
     .carousel-section {
@@ -239,21 +284,49 @@
 <body>
 
   <header>
+    <!-- Left decoration -->
+    <svg class="header-deco left" aria-hidden="true" viewBox="0 0 220 180" width="220" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Flower-of-life cluster, centre at (65,90), r=36 -->
+      <circle cx="65"  cy="90"  r="36" fill="#fff" fill-opacity="0.07" stroke="#ffe8f4" stroke-width="1.2"/>
+      <circle cx="65"  cy="54"  r="36" fill="#fff" fill-opacity="0.06" stroke="#f8d0f0" stroke-width="1"/>
+      <circle cx="96"  cy="72"  r="36" fill="#fff" fill-opacity="0.06" stroke="#dcd8ff" stroke-width="1"/>
+      <circle cx="96"  cy="108" r="36" fill="#fff" fill-opacity="0.06" stroke="#f0c4e8" stroke-width="1"/>
+      <circle cx="34"  cy="72"  r="36" fill="#fff" fill-opacity="0.06" stroke="#d4d0ff" stroke-width="1"/>
+      <circle cx="34"  cy="108" r="36" fill="#fff" fill-opacity="0.06" stroke="#fcc8f0" stroke-width="1"/>
+      <circle cx="65"  cy="126" r="36" fill="#fff" fill-opacity="0.06" stroke="#e8ccff" stroke-width="1"/>
+      <!-- Centre jewel -->
+      <circle cx="65" cy="90" r="9" fill="#fff0f8" fill-opacity="0.32"/>
+      <!-- Small floating diamonds -->
+      <polygon points="158,28 165,38 158,48 151,38" fill="#ffe8f4" opacity="0.22"/>
+      <polygon points="185,95 190,103 185,111 180,103" fill="#dcd8ff" opacity="0.18"/>
+      <polygon points="140,148 146,156 140,164 134,156" fill="#f8d0f0" opacity="0.16"/>
+      <!-- Dot accents -->
+      <circle cx="175" cy="42"  r="4" fill="#fff0f8" fill-opacity="0.28"/>
+      <circle cx="200" cy="130" r="3" fill="#ffe8f4" fill-opacity="0.22"/>
+      <circle cx="155" cy="170" r="5" fill="#dcd8ff" fill-opacity="0.2"/>
+    </svg>
+
+    <!-- Right decoration (mirrored via CSS scaleX) -->
+    <svg class="header-deco right" aria-hidden="true" viewBox="0 0 220 180" width="220" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="65"  cy="90"  r="36" fill="#fff" fill-opacity="0.07" stroke="#ffe8f4" stroke-width="1.2"/>
+      <circle cx="65"  cy="54"  r="36" fill="#fff" fill-opacity="0.06" stroke="#f8d0f0" stroke-width="1"/>
+      <circle cx="96"  cy="72"  r="36" fill="#fff" fill-opacity="0.06" stroke="#dcd8ff" stroke-width="1"/>
+      <circle cx="96"  cy="108" r="36" fill="#fff" fill-opacity="0.06" stroke="#f0c4e8" stroke-width="1"/>
+      <circle cx="34"  cy="72"  r="36" fill="#fff" fill-opacity="0.06" stroke="#d4d0ff" stroke-width="1"/>
+      <circle cx="34"  cy="108" r="36" fill="#fff" fill-opacity="0.06" stroke="#fcc8f0" stroke-width="1"/>
+      <circle cx="65"  cy="126" r="36" fill="#fff" fill-opacity="0.06" stroke="#e8ccff" stroke-width="1"/>
+      <circle cx="65" cy="90" r="9" fill="#fff0f8" fill-opacity="0.32"/>
+      <polygon points="158,28 165,38 158,48 151,38" fill="#ffe8f4" opacity="0.22"/>
+      <polygon points="185,95 190,103 185,111 180,103" fill="#dcd8ff" opacity="0.18"/>
+      <polygon points="140,148 146,156 140,164 134,156" fill="#f8d0f0" opacity="0.16"/>
+      <circle cx="175" cy="42"  r="4" fill="#fff0f8" fill-opacity="0.28"/>
+      <circle cx="200" cy="130" r="3" fill="#ffe8f4" fill-opacity="0.22"/>
+      <circle cx="155" cy="170" r="5" fill="#dcd8ff" fill-opacity="0.2"/>
+    </svg>
+
     <h1>Jordan Lane Peacock</h1>
     <p class="tagline">Help fund a summer of changes.</p>
   </header>
-
-  <div class="intro">
-    <p>
-      It's June 2026. My software company of more than eleven years, Becoming Machinic, has ceased operations. My co-founder has moved on to another company, and I have helped start the Sannvev Institute. However, as part of winding down Becoming Machinic, I have had to declare personal bankruptcy.
-    </p>
-    <p>
-      In parallel, my wife and I are divorcing. It's going about as amicably as these things are able to, but it's also the source of grief and necessary change.
-    </p>
-    <p>
-      The next few months are a financial dead zone: a lot of one-off expenses, and we're targeting a first payroll for me in early September. So I'm offering what I can commit to right now, in hopes of being useful to others while finding the resources to see this transformation through.
-    </p>
-  </div>
 
   <nav class="filter-menu" aria-label="Filter services">
     <button class="filter-tab" data-filter="ai">AI</button>
@@ -261,6 +334,15 @@
     <button class="filter-tab" data-filter="roleplaying">Roleplaying</button>
     <button class="filter-tab" data-filter="donate">Donate</button>
   </nav>
+
+  <details class="story-toggle">
+    <summary><span class="toggle-icon">+</span> What's been happening</summary>
+    <div class="story-body">
+      <p>It's June 2026. My software company of more than eleven years, Becoming Machinic, has ceased operations. My co-founder has moved on to another company, and I have helped start the Sannvev Institute. However, as part of winding down Becoming Machinic, I have had to declare personal bankruptcy.</p>
+      <p>In parallel, my wife and I are divorcing. It's going about as amicably as these things are able to, but it's also the source of grief and necessary change.</p>
+      <p>The next few months are a financial dead zone: a lot of one-off expenses, and we're targeting a first payroll for me in early September. So I'm offering what I can commit to right now, in hopes of being useful to others while finding the resources to see this transformation through.</p>
+    </div>
+  </details>
 
   <section class="carousel-section">
     <p class="carousel-hint">← swipe or use arrows →</p>
