@@ -376,25 +376,18 @@
 
     let overlayInjected = false;
 
-    function ensureCheckouts(cards) {
-      let hasNew = false;
-      cards.forEach(card => {
+    function ensureCheckouts() {
+      if (overlayInjected) return;
+      // Promote all data-src → data-checkout in one pass so overlay.js finds everything
+      allCards.forEach(card => {
         const div = card.querySelector('[data-src]:not([data-checkout])');
-        if (div) {
-          div.setAttribute('data-checkout', div.dataset.src);
-          hasNew = true;
-        }
+        if (div) div.setAttribute('data-checkout', div.dataset.src);
       });
-      if (hasNew || !overlayInjected) {
-        const old = document.getElementById('cp-overlay');
-        if (old) old.remove();
-        const s = document.createElement('script');
-        s.id = 'cp-overlay';
-        s.src = 'https://assets.checkoutpage.com/overlay.js';
-        s.async = true;
-        document.body.appendChild(s);
-        overlayInjected = true;
-      }
+      const s = document.createElement('script');
+      s.src = 'https://assets.checkoutpage.com/overlay.js';
+      s.async = true;
+      document.body.appendChild(s);
+      overlayInjected = true;
     }
 
     document.querySelectorAll('.filter-tab').forEach(tab => {
@@ -403,7 +396,7 @@
         tab.classList.add('active');
         filterCategory(tab.dataset.filter);
         document.querySelector('.carousel-section').style.display = 'flex';
-        ensureCheckouts(visible());
+        ensureCheckouts();
       });
     });
 
